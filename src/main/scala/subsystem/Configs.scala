@@ -24,7 +24,8 @@ class BaseSubsystemConfig extends Config ((site, here, up) => {
   case ControlBusKey => PeripheryBusParams(
     beatBytes = site(XLen)/8,
     blockBytes = site(CacheBlockBytes),
-    errorDevice = Some(DevNullParams(List(AddressSet(0x3000, 0xfff)), maxAtomic=site(XLen)/8, maxTransfer=4096)))
+    errorDevice = Some(BuiltInErrorDeviceParams(
+      errorParams = DevNullParams(List(AddressSet(0x3000, 0xfff)), maxAtomic=site(XLen)/8, maxTransfer=4096))))
   case PeripheryBusKey => PeripheryBusParams(
     beatBytes = site(XLen)/8,
     blockBytes = site(CacheBlockBytes),
@@ -372,7 +373,7 @@ class WithNMemoryChannels(n: Int) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(_.copy(nMemoryChannels = n))
 })
 
-class WithExtMemSize(n: Long) extends Config((site, here, up) => {
+class WithExtMemSize(n: BigInt) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(master = x.master.copy(size = n)))
 })
 
